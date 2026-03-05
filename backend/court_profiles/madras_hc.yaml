@@ -1,0 +1,71 @@
+court_id: madras_hc
+court_name: Madras High Court
+inherits: _defaults
+
+extraction_mode: columnar
+
+skip_until_first_bench: false
+
+bench_header_patterns:
+  - 'COURT\s*NO[\.\s]*\.?\s*(\d+)'
+  - 'COURT\s+NO\s*[:\-]?\s*(\d+)'
+
+section_headers:
+  - FOR ADMISSION
+  - AFTER NOTICE
+  - FOR HEARING
+  - FOR ORDERS
+  - FINAL HEARING
+  - TO CONDONE DELAY
+  - FOR ADMISSION (CRL.A)
+  - FOR ADMISSION (CRL OP)
+  - ADJOURNED ADMISSION
+  - TO GRANT LEAVE
+  - TO SUSPEND THE SENTENCE
+  - FOR MODIFICATION
+  - FOR RELAXATION
+  - CRIMINAL OP CASES
+  - CRIMINAL APPEAL CASES
+  - NOTICE OF MOTION
+  - FOR DISMISSAL
+  - FOR CBI CASES
+  - REGULAR LIST
+
+primary_case_types:
+  - WA
+  - WP
+  - WPC
+  - OP
+  - OSA
+  - CMA
+  - CRP
+  - CRL MP
+  - CRL A
+  - CRL OP
+  - CRL RC
+  - WP CRL
+  - CONT P
+  - SA
+  - CS
+
+connected_matter_types:
+  - WMP
+  - MP
+  - CMP
+  - IA
+  - CRL MP
+  - CRL A(F)
+
+case_number_split_lines: true
+
+preamble_patterns:
+  - 'NOTIFICATION NO\.'
+  - '^INDEX$'
+  - 'Sl\.No\.\s+Court'
+  - 'ADDITIONAL HERITAGE'
+  - 'MEDIATION AND CONCILIATION'
+  - 'PROVISIONAL LIST'
+  - 'HON.BLE'
+  - 'NATIONAL LOK ADALAT'
+  - 'SITTING ARRANGEMENTS'
+  - '^\d+\s+\d+\s+\d+\s*-+\s*\d+'

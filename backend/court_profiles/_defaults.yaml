@@ -1,0 +1,60 @@
+bench_header_patterns:
+  - 'COURT\s*NO[\.\s]*\.?\s*(\d+)'
+  - 'BENCH\s*NO[\.\s]*(\d+)'
+  - 'COURT\s+(\d+)'
+section_headers:
+  - FOR ADMISSION
+  - AFTER NOTICE
+  - FOR HEARING
+  - FOR ORDERS
+  - FINAL HEARING
+  - LISTED MATTERS
+  - FOR PRONOUNCEMENT
+  - MOTION HEARING
+  - TO CONDONE DELAY
+  - ADJOURNED ADMISSION
+  - TO GRANT LEAVE
+  - TO SUSPEND THE SENTENCE
+  - FOR MODIFICATION
+  - FOR RELAXATION
+  - FOR CBI CASES
+  - CRIMINAL OP CASES
+  - CRIMINAL APPEAL CASES
+  - NOTICE OF MOTION
+  - FOR DISMISSAL
+party_separators:
+  - VS
+  - VERSUS
+  - V/S
+  - "VS."
+case_number_pattern: '([A-Z][A-Z\s\(\)]*?)\s+(\d+)/(\d{4})'
+primary_case_types:
+  - WA
+  - WP
+  - WPC
+  - SLP
+  - CA
+  - OP
+  - OSA
+  - CMA
+  - CRP
+  - LPA
+  - FAO
+  - RSA
+  - CRA
+  - CRL MP
+  - CRL A
+  - CRL OP
+  - CRL RC
+  - WP CRL
+  - CONT P
+connected_matter_types:
+  - CMP
+  - WMP
+  - MP
+  - IA
+  - EA
+  - SA
+  - CRL MP
+  - CRL A(F)
+  - CRL RC(F)
