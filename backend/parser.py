@@ -19,7 +19,7 @@ from collections import defaultdict
 
 import pdfplumber
 
-from .extractor import extract_rows, extract_date_from_page
+from extractor import extract_rows, extract_date_from_page
 
 logger = logging.getLogger(__name__)
 
