@@ -11,7 +11,7 @@ import logging
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from .parser import CauseListParser
+from parser import CauseListParser
 
 logging.basicConfig(
     level=logging.INFO,
