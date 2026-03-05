@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from 'react'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001'
+const __RAW_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+const API_URL = __RAW_API_URL.replace(/\/+$/, '');
 
 // ─── ProgressBar ───
 function ProgressBar({ progress }) {
