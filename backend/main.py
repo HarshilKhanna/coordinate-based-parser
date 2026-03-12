@@ -51,7 +51,7 @@ def _parse_sync(task_id: str, pdf_bytes: bytes) -> None:
         logger.info("Task %s: starting parse (%d bytes)", task_id, len(pdf_bytes))
 
         parser = CauseListParser(court_name="Madras High Court")
-        records = parser.parse_bytes(pdf_bytes, skip_pages=5)
+        records = parser.parse_bytes(pdf_bytes, skip_pages=5, max_pages=25)
         summary = parser.summary()
 
         logger.info(

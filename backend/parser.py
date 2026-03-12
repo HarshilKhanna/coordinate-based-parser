@@ -445,13 +445,14 @@ class CauseListParser:
             # Continuation row for the current sub-case
             self._sub_case_rows.append(z)
 
-    def parse_bytes(self, pdf_bytes: bytes, skip_pages: int = 5) -> list[dict]:
+    def parse_bytes(self, pdf_bytes: bytes, skip_pages: int = 5, max_pages: int | None = None) -> list[dict]:
         """
         Parse a PDF from bytes (for FastAPI integration).
 
         Args:
             pdf_bytes: Raw PDF file bytes
             skip_pages: Number of index/preamble pages to skip (default 5)
+            max_pages: Maximum number of content pages to process (default: all)
         """
         with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
             # Extract date from page 1
@@ -460,8 +461,12 @@ class CauseListParser:
                 if date_str:
                     self.listing_date = date_str
 
+            content_pages = pdf.pages[skip_pages:]
+            if max_pages is not None:
+                content_pages = content_pages[:max_pages]
+
             # Process case pages (skip index/preamble)
-            for page in pdf.pages[skip_pages:]:
+            for page in content_pages:
                 if self._terminated:
                     break
                 rows = extract_rows(page)
