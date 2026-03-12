@@ -379,6 +379,7 @@ export default function App() {
         setError(null)
         setData(null)
 
+        // Animated progress steps shown while the backend is working
         const steps = [
             { percent: 15, message: 'Uploading PDF…', phase: 'extracting' },
             { percent: 40, message: 'Extracting word coordinates…', phase: 'extracting' },
@@ -387,26 +388,55 @@ export default function App() {
         ]
         let stepIdx = 0
         setProgress(steps[0])
-        const timer = setInterval(() => {
-            stepIdx++
-            if (stepIdx < steps.length) setProgress(steps[stepIdx])
-        }, 1200)
+        const animTimer = setInterval(() => {
+            stepIdx = Math.min(stepIdx + 1, steps.length - 1)
+            setProgress(steps[stepIdx])
+        }, 1800)
+
+        let pollTimer = null
 
         try {
             const formData = new FormData()
             formData.append('file', file)
 
-            const res = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData })
-            if (!res.ok) throw new Error(`Server error: ${res.status}`)
+            // POST returns immediately with a task_id
+            const uploadRes = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData })
+            if (!uploadRes.ok) throw new Error(`Server error: ${uploadRes.status}`)
 
-            const json = await res.json()
+            const { task_id } = await uploadRes.json()
+            if (!task_id) throw new Error('No task_id returned from server')
 
-            clearInterval(timer)
-            setProgress({ percent: 100, message: 'Complete!', phase: 'done' })
-            await new Promise(r => setTimeout(r, 400))
-            setData(json)
+            // Poll /status/:task_id until done or error
+            await new Promise((resolve, reject) => {
+                pollTimer = setInterval(async () => {
+                    try {
+                        const statusRes = await fetch(`${API_URL}/status/${task_id}`)
+                        if (!statusRes.ok) return // transient network hiccup — keep polling
+                        const statusData = await statusRes.json()
+
+                        if (statusData.status === 'done') {
+                            clearInterval(pollTimer)
+                            clearInterval(animTimer)
+                            setProgress({ percent: 100, message: 'Complete!', phase: 'done' })
+                            await new Promise(r => setTimeout(r, 400))
+                            setData(statusData.result)
+                            resolve()
+                        } else if (statusData.status === 'error') {
+                            clearInterval(pollTimer)
+                            reject(new Error(statusData.error || 'Parsing failed on server'))
+                        } else if (statusData.status === 'not_found') {
+                            clearInterval(pollTimer)
+                            reject(new Error('Task not found — server may have restarted'))
+                        }
+                        // status === 'queued' | 'processing' → keep polling
+                    } catch (pollErr) {
+                        // ignore transient fetch errors; keep polling
+                    }
+                }, 3000)
+            })
         } catch (err) {
-            clearInterval(timer)
+            if (pollTimer) clearInterval(pollTimer)
+            clearInterval(animTimer)
             setError(err.message)
         } finally {
             setLoading(false)
